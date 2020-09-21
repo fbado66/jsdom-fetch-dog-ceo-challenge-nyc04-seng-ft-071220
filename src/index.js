@@ -1,6 +1,7 @@
 console.log('%c HI', 'color: firebrick')
 
 // FIRST CHALLENGE 
+let allBreeds = [];
 
 const imgUrl = "https://dog.ceo/api/breeds/image/random/4"
 // STABLE ELEMENT
@@ -11,17 +12,14 @@ let dogContainer = document.querySelector("div#dog-image-container")
 fetch (imgUrl)
 .then(res => res.json())
 .then((dogImg) => {
-    // console.log(dogImg)
     makeDogImgIntoHTLM(dogImg)       
     });
 
+
 let makeDogImgIntoHTLM = (dogPOJO) => {
-    // console.log(dogPOJO)
     dogPOJO.message.forEach((imgLink) => {
-        // console.log(imgLink)
         let dogElement = document.createElement("img")
         dogElement.className = 'new-dog'
-        // console.log(dogElement)
         dogElement.src = imgLink
         dogContainer.append(dogElement)
     });
@@ -39,21 +37,21 @@ const breedUrl = 'https://dog.ceo/api/breeds/list/all'
 fetch(breedUrl)
 .then(res => res.json())
 .then(breedArry => {
+    // console.log(breedArry)
         turnBreedArrayIntoHtml(breedArry)
-
     })
+
 
 let turnBreedArrayIntoHtml = (breedPOJO) => {
     // RETURNS A HASH THEREFORE Object.keys notation
-    Object.keys(breedPOJO.message).forEach((breed) => {
-        // console.log(breed)
+    allBreeds = Object.keys(breedPOJO.message)
+    allBreeds.forEach((breed) => {
+
         let breedLi = document.createElement('li')
         breedLi.innerText = breed
         dogBreeds.append(breedLi)
         breedLi.addEventListener('click', changeColor )
-        breedLi.addEventListener('mouseover', pointercursor )
-
-
+        breedLi.addEventListener('mouseover', pointercursor)
     })
     }
     
@@ -69,36 +67,26 @@ let pointercursor = (evt) => {
     evt.target.style.cursor = 'pointer'
 }
 
-
 // FOURTH CHALLENGE
 // SELECTOR ELEMENT 
+
 let breedDropdw = document.querySelector('select#breed-dropdown')
+
 breedDropdw.addEventListener('change', (evt) => {
-    evt.preventDefault
-    displayOnlyBreedwWithSelectedLetter(breedDropdw.value)
-    // turnBreedArrayIntoHtml(breeds)
-})
+    evt.preventDefault()
+    let selectedLetter = evt.target.value
+    let filteredBreeds = allBreeds.filter((breed) => breed.startsWith(selectedLetter)) 
+    dogBreeds.innerHTML = NewListDog(filteredBreeds)
 
+});
 
-
-let displayOnlyBreedwWithSelectedLetter = (selectedLetter) => {
-    updatebreeds(selectedLetter)
+let NewListDog = (dogarray) => {
+    let dogBreedArrayList = dogarray.map((breed) => {
+        return `<li>${breed}</li>`
+    })
+return dogBreedArrayList.join('')
 }
 
-let updatebreeds = (breeds) => {
-    // let dogBreeds = document.querySelector("ul#dog-breeds");
-    remove(dogBreeds, breeds)
-    console.log(breeds)
-    
-}
 
-let remove = (element, breeds) => {
-    dogLI = element.lastElementChild;
-    while (dogLI.innerText[0] !== breeds) {
-        console.log(dogLI.innerText)
-        element.removeChild(dogLI)
-        dogLI = element.lastElementChild
-    }
 
- }
 
